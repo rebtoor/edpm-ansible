@@ -20,11 +20,11 @@ jobs:
         run: |
           tox -e docs
       - name: Upload artifacts
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-pages-artifact@v1.0.7
         with:
           path: docs/build/html/
       - name: Deploy
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v1.2.4
         with:
+          name:
           github_token: ${{ secrets.GITHUB_TOKEN }}
