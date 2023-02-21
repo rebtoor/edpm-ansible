@@ -15,6 +15,7 @@
 import os
 import sys
 
+from ansible.plugins import loader
 
 # Add the project
 sys.path.insert(0, os.path.abspath('../..'))
