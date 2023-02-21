@@ -15,7 +15,7 @@
 import os
 import sys
 
-from ansible.plugins import loader
+from ansible.plugins import loader # noqa F401
 
 # Add the project
 sys.path.insert(0, os.path.abspath('../..'))
