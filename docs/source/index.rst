@@ -11,13 +11,11 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   contributor/contributing
    installation
    contributing_roles
    usage
    roles
    modules
-   standalone-roles-playbooks
 
 Indices and tables
 ==================

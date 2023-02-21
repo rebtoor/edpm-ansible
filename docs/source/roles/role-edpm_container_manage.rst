@@ -81,28 +81,28 @@ Roles variables
 +------------------------------------------------+-----------------------------+----------------------------+
 | Name                                           | Default Value               | Description                |
 +================================================+=============================+============================+
-| edpm_container_manage_cli                   | podman                      | Container CLI              |
+| edpm_container_manage_cli                      | podman                      | Container CLI              |
 +------------------------------------------------+-----------------------------+----------------------------+
-| edpm_container_manage_concurrency           | 1                           | Number of containers       |
+| edpm_container_manage_concurrency              | 1                           | Number of containers       |
 |                                                |                             | managed at same time       |
 +------------------------------------------------+-----------------------------+----------------------------+
-| edpm_container_manage_config                | /var/lib/edpm-config/    | Container config path      |
+| edpm_container_manage_config                   | /var/lib/edpm-config/       | Container config path      |
 +------------------------------------------------+-----------------------------+----------------------------+
-| edpm_container_manage_config_id             | edpm                     | Config ID                  |
+| edpm_container_manage_config_id                | edpm                        | Config ID                  |
 +------------------------------------------------+-----------------------------+----------------------------+
-| edpm_container_manage_config_patterns       | `*.json`                    | Bash REGEX to find configs |
+| edpm_container_manage_config_patterns          | `*.json`                    | Bash REGEX to find configs |
 +------------------------------------------------+-----------------------------+----------------------------+
-| edpm_container_manage_debug                 | false                       | Debug toggle               |
+| edpm_container_manage_debug                    | false                       | Debug toggle               |
 +------------------------------------------------+-----------------------------+----------------------------+
-| edpm_container_manage_healthcheck_disable   | false                       | Allow to disable           |
+| edpm_container_manage_healthcheck_disable      | false                       | Allow to disable           |
 |                                                |                             | Healthchecks               |
 +------------------------------------------------+-----------------------------+----------------------------+
-| edpm_container_manage_log_path              | /var/log/containers/stdouts | Containers stdouts path    |
+| edpm_container_manage_log_path                 | /var/log/containers/stdouts | Containers stdouts path    |
 +------------------------------------------------+-----------------------------+----------------------------+
-| edpm_container_manage_config_overrides      | {}                          | Allows to override any     |
+| edpm_container_manage_config_overrides         | {}                          | Allows to override any     |
 |                                                |                             | container configuration    |
 +------------------------------------------------+-----------------------------+----------------------------+
-| edpm_container_manage_clean_orphans         | true                        | Option to clean orphans    |
+| edpm_container_manage_clean_orphans            | true                        | Option to clean orphans    |
 +------------------------------------------------+-----------------------------+----------------------------+
 
 Healthchecks
