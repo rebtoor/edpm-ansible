@@ -22,10 +22,6 @@ from docutils import nodes
 from docutils.parsers.rst import Directive
 from docutils.parsers import rst
 from docutils.writers.html4css1 import Writer
-
-from sphinx import addnodes
-
-import yaml
 from ruamel.yaml import YAML as RYAML
 
 try:
@@ -222,7 +218,7 @@ class AnsibleAutoPluginDirective(Directive):
                                  ' and variables set within the "{}"'
                                  ' role.'.format(
                                      os.path.basename(role)
-                    )
+                                 )
                 )
             )
 
@@ -247,7 +243,7 @@ class AnsibleAutoPluginDirective(Directive):
                  ' and provides an example playbook showing how the role'
                  ' is leveraged.'.format(
                      os.path.basename(role)
-            )
+                 )
         )
         molecule_path = os.path.join(role, 'molecule')
         if os.path.exists(molecule_path):
@@ -293,7 +289,8 @@ class AnsibleAutoPluginDirective(Directive):
                             )
                         )
                 os.environ["MOLECULE_SCENARIO_DIRECTORY"] = test_path
-                converge_playbook_path = os.path.join(test_path, 'converge.yml')
+                converge_playbook_path = os.path.join(
+                    test_path, 'converge.yml')
                 molecule_playbook_path = os.path.expandvars(
                     provisioner_data.get('playbooks', {})
                     .get('converge', converge_playbook_path)
