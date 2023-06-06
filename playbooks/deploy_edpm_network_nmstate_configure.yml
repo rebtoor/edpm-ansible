@@ -21,8 +21,8 @@
   gather_facts: "{{ gather_facts | default(false) }}"
   any_errors_fatal: true
   tasks:
-    - name: Run linux-system-roles.network
+    - name: Run linux_system_roles.network
       ansible.builtin.import_role:
-        name: linux-system-roles.network
+        name: fedora.linux_system_roles.network
       tags:
         - edpm_network_config
