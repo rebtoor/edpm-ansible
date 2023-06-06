@@ -1,5 +1,5 @@
 ---
-# Copyright 2023 Red Hat, Inc.
+# Copyright 2022 Red Hat, Inc.
 # All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -14,11 +14,15 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-collections:
-  - ansible.posix
-  - community.general
-  - containers.podman
-  - fedora.linux-system-roles
-  - name: https://opendev.org/openstack/ansible-config_template
-    version: master
-    type: git
+
+- hosts: "{{ primary_role_name | default([]) }}:{{ deploy_target_host | default('overcloud') }}"
+  strategy: free
+  name: Deploy EDPM Network with nmstate
+  gather_facts: "{{ gather_facts | default(false) }}"
+  any_errors_fatal: true
+  tasks:
+    - name: Run linux-system-roles.network
+      ansible.builtin.import_role:
+        name: linux-system-roles.network
+      tags:
+        - edpm_network_config
