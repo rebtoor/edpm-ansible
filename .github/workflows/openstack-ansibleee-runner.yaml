@@ -3,7 +3,7 @@ name: OpenStackAnsibleEE runner image builder
 on:
   push:
     branches:
-      - '*'
+      - "*"
     paths-ignore:
       - .gitignore
       - .pull_request_pipeline
@@ -14,12 +14,11 @@ on:
       - tests/
 
 env:
-  imageregistry: 'quay.io'
+  imageregistry: "quay.io"
   imagenamespace: ${{ secrets.IMAGENAMESPACE || secrets.QUAY_USERNAME }}
   latesttag: latest
 
 jobs:
-
   check-secrets:
     runs-on: ubuntu-latest
     steps:
@@ -37,31 +36,33 @@ jobs:
     if: needs.check-secrets.outputs.have-secrets == 'true'
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Get branch name
-      id: branch-name
-      uses: tj-actions/branch-names@v5
+      - name: Get branch name
+        id: branch-name
+        uses: tj-actions/branch-names@v5
 
-    - name: Set latest tag for non main branch
-      if: "${{ steps.branch-name.outputs.current_branch != 'main' }}"
-      run: |
-        echo "latesttag=${{ steps.branch-name.outputs.current_branch }}-latest" >> $GITHUB_ENV
+      - name: Set latest tag for non main branch
+        if: |
+          "${{ steps.branch-name.outputs.current_branch != 'main' }}" &&
+          "${{ steps.branch-name.outputs.current_branch != 'dev-preview2' }}"
+        run: |
+          echo "latesttag=${{ steps.branch-name.outputs.current_branch }}-latest" >> $GITHUB_ENV
 
-    - name: Buildah Action
-      id: build-openstack-ansibleee-runner
-      uses: redhat-actions/buildah-build@v2
-      with:
-        image: openstack-ansibleee-runner
-        tags: ${{ env.latesttag }} ${{ github.sha }}
-        containerfiles: |
-          ./openstack_ansibleee/Dockerfile
+      - name: Buildah Action
+        id: build-openstack-ansibleee-runner
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: openstack-ansibleee-runner
+          tags: ${{ env.latesttag }} ${{ github.sha }}
+          containerfiles: |
+            ./openstack_ansibleee/Dockerfile
 
-    - name: Push openstack-ansibleee-runner To ${{ env.imageregistry }}
-      uses: redhat-actions/push-to-registry@v2
-      with:
-        image: ${{ steps.build-openstack-ansibleee-runner.outputs.image }}
-        tags: ${{ steps.build-openstack-ansibleee-runner.outputs.tags }}
-        registry: ${{ env.imageregistry }}/${{ env.imagenamespace }}
-        username: ${{ secrets.QUAY_USERNAME }}
-        password: ${{ secrets.QUAY_PASSWORD }}
+      - name: Push openstack-ansibleee-runner To ${{ env.imageregistry }}
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build-openstack-ansibleee-runner.outputs.image }}
+          tags: ${{ steps.build-openstack-ansibleee-runner.outputs.tags }}
+          registry: ${{ env.imageregistry }}/${{ env.imagenamespace }}
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_PASSWORD }}
