@@ -18,4 +18,13 @@
 - name: Prepare
   hosts: all
   roles:
+    - role: ../../../../molecule/common/test_deps
+      test_deps_setup_edpm: true
+      test_deps_setup_stream: true
+    - role: osp.edpm.edpm_users
+      edpm_users_users: [{"name": "hugetlbfs", "gid": "42477", "group_only": true}]
+      edpm_users_extra_dirs: []
+    - role: osp.edpm.edpm_ovs
+      #FIXME, see if the older available version can be picked programmatically
+      edpm_ovs_packages: [rdo-openvswitch-3.2]
     - role: osp.edpm.env_data

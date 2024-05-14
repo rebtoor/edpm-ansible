@@ -1,0 +1,22 @@
+- name: Verify OVS update
+  hosts: all
+  vars:
+    test_helper_dir: "../../../../molecule/test-helpers"
+  tasks:
+    - name: Ensure openvswitch systemd services are in appropriate states after the update
+      ansible.builtin.include_tasks: "{{test_helper_dir}}/verify_systemd_unit.yaml"
+      loop:
+        # "osp_service": false, disable check for unit files in /etc/systemd/system
+        # OVS systemd unit files are located in /usr/lib/systemd/system
+        - { "name": "openvswitch.service",
+            "osp_service": false,
+            "enabled": "enabled",
+            "active":  ["active"] }
+        - { "name": "ovs-vswitchd.service",
+            "osp_service": false,
+            "enabled": "static",
+            "active":  ["active"] }
+        - { "name": "ovsdb-server.service",
+            "osp_service": false,
+            "enabled": "static",
+            "active": ["active"] }
