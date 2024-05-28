@@ -19,4 +19,6 @@
     daemon_reload: true
     state: reloaded
     masked: false
-  when: '"Nothing to do." not in update_ovs_result.stdout_lines'
+  when:
+    - edpm_ovs_reload_after_update
+    - '"Nothing to do." not in update_ovs_result.stdout_lines'

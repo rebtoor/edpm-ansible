@@ -17,14 +17,44 @@
 
 - name: Prepare
   hosts: all
-  roles:
-    - role: ../../../../molecule/common/test_deps
-      test_deps_setup_edpm: true
-      test_deps_setup_stream: true
-    - role: osp.edpm.edpm_users
-      edpm_users_users: [{"name": "hugetlbfs", "gid": "42477", "group_only": true}]
-      edpm_users_extra_dirs: []
-    - role: osp.edpm.edpm_ovs
-      #FIXME, see if the older available version can be picked programmatically
-      edpm_ovs_packages: [rdo-openvswitch-3.2]
-    - role: osp.edpm.env_data
+  tasks:
+    - name: Enable package repos
+      become: true
+      ansible.builtin.shell: |
+        set -euxo pipefail
+        pushd /var/tmp
+        curl -sL https://github.com/openstack-k8s-operators/repo-setup/archive/refs/heads/main.tar.gz | tar -xz
+        pushd repo-setup-main
+        python3 -m venv ./venv
+        PBR_VERSION=0.0.0 ./venv/bin/pip install ./
+        ./venv/bin/repo-setup current-podified -b antelope
+        popd
+        rm -rf repo-setup-main
+
+    - name: "Include edpm_users with non default config"
+      ansible.builtin.include_role:
+        name: "osp.edpm.edpm_users"
+      vars:
+        edpm_users_users:
+          - {"name": "hugetlbfs", "gid": "42477", "group_only": true}
+        edpm_users_extra_dirs: []
+
+    - name: Install openvswitch
+      ansible.builtin.import_role:
+        name:  osp.edpm.edpm_ovs
+      vars:
+        edpm_ovs_packages: [rdo-openvswitch-3.2]
+
+    - name: Collect openvswitch services pids for later validation
+      community.general.pids:
+        pattern: ovs(db-server|-vswitch)
+      register: ovs_pids_before_update
+
+    - name: Ensure pids were recorded
+      ansible.builtin.assert:
+        that: "{{ovs_pids_before_update | length > 0}}"
+        fail_msg: "No active pids found for open_vswitch services"
+
+    - name: Setting facts for OVS pids for later validation
+      ansible.builtin.set_fact:
+         ovs_pids_before_update: "{{ovs_pids_before_update}}"

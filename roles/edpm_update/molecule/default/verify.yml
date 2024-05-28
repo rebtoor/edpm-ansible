@@ -20,3 +20,9 @@
             "osp_service": false,
             "enabled": "static",
             "active": ["active"] }
+
+    - name: Ensure openvswitch service pids did not change after the update
+      community.general.pids:
+        pattern: ovs(db-server|-vswitch)
+      register: ovs_pids_after_update
+      failed_when: "{{hostvars[inventory_hostname]['ovs_pids_before_update']['pids'] != ovs_pids_after_update.pids}}"
